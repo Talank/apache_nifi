@@ -42,7 +42,7 @@ jobs:
   validate:
     timeout-minutes: 60
     name: Validate
-    runs-on: ubuntu-24.04
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v6
@@ -62,10 +62,17 @@ jobs:
           --activate-profiles contrib-check
           validate
 
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+      fail-fast: false
   scan:
     timeout-minutes: 120
     name: Scan
-    runs-on: ubuntu-24.04
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v6
@@ -111,3 +118,10 @@ jobs:
           severity-cutoff: 'medium'
           only-fixed: true
           fail-build: ${{ github.ref_name == 'main' && 'true' || 'false' }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+      fail-fast: false
