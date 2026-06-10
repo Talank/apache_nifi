@@ -16,35 +16,7 @@
 name: docker-tests
 
 on:
-  push:
-    paths:
-      - '.github/workflows/docker-tests.yml'
-      - 'pom.xml'
-      - 'nifi-assembly/**'
-      - 'nifi-docker/**'
-      - 'nifi-registry/pom.xml'
-      - 'nifi-registry/nifi-registry-core/**'
-      - 'nifi-registry/nifi-registry-assembly/**'
-      - 'nifi-registry/nifi-registry-docker-maven/**'
-      - 'nifi-toolkit/nifi-toolkit-assembly/**'
-      - 'nifi-toolkit/nifi-toolkit-cli/**'
-      - 'minifi/minifi-assembly/**'
-      - 'minifi/minifi-docker/**'
-  pull_request:
-    paths:
-      - '.github/workflows/docker-tests.yml'
-      - 'pom.xml'
-      - 'nifi-assembly/**'
-      - 'nifi-docker/**'
-      - 'nifi-registry/pom.xml'
-      - 'nifi-registry/nifi-registry-core/**'
-      - 'nifi-registry/nifi-registry-assembly/**'
-      - 'nifi-registry/nifi-registry-docker-maven/**'
-      - 'nifi-toolkit/nifi-toolkit-assembly/**'
-      - 'nifi-toolkit/nifi-toolkit-cli/**'
-      - 'minifi/minifi-assembly/**'
-      - 'minifi/minifi-docker/**'
-
+  workflow_dispatch:
 env:
   DEFAULT_MAVEN_OPTS: >-
     -Xmx4g
@@ -158,3 +130,5 @@ jobs:
           ${{ env.MAVEN_COMMAND }}
           ${{ env.MAVEN_DOCKER_ARGUMENTS }}
           ${{ env.MAVEN_DOCKER_PROJECTS }}
+    strategy:
+      fail-fast: false

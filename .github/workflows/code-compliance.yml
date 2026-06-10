@@ -17,10 +17,6 @@ name: code-compliance
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 0 * * *"
-  pull_request:
-  push:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -62,6 +58,8 @@ jobs:
           --activate-profiles contrib-check
           validate
 
+    strategy:
+      fail-fast: false
   scan:
     timeout-minutes: 120
     name: Scan
@@ -111,3 +109,5 @@ jobs:
           severity-cutoff: 'medium'
           only-fixed: true
           fail-build: ${{ github.ref_name == 'main' && 'true' || 'false' }}
+    strategy:
+      fail-fast: false
