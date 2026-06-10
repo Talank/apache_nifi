@@ -16,35 +16,7 @@
 name: docker-tests
 
 on:
-  push:
-    paths:
-      - '.github/workflows/docker-tests.yml'
-      - 'pom.xml'
-      - 'nifi-assembly/**'
-      - 'nifi-docker/**'
-      - 'nifi-registry/pom.xml'
-      - 'nifi-registry/nifi-registry-core/**'
-      - 'nifi-registry/nifi-registry-assembly/**'
-      - 'nifi-registry/nifi-registry-docker-maven/**'
-      - 'nifi-toolkit/nifi-toolkit-assembly/**'
-      - 'nifi-toolkit/nifi-toolkit-cli/**'
-      - 'minifi/minifi-assembly/**'
-      - 'minifi/minifi-docker/**'
-  pull_request:
-    paths:
-      - '.github/workflows/docker-tests.yml'
-      - 'pom.xml'
-      - 'nifi-assembly/**'
-      - 'nifi-docker/**'
-      - 'nifi-registry/pom.xml'
-      - 'nifi-registry/nifi-registry-core/**'
-      - 'nifi-registry/nifi-registry-assembly/**'
-      - 'nifi-registry/nifi-registry-docker-maven/**'
-      - 'nifi-toolkit/nifi-toolkit-assembly/**'
-      - 'nifi-toolkit/nifi-toolkit-cli/**'
-      - 'minifi/minifi-assembly/**'
-      - 'minifi/minifi-docker/**'
-
+  workflow_dispatch:
 env:
   DEFAULT_MAVEN_OPTS: >-
     -Xmx4g
@@ -103,7 +75,7 @@ permissions:
 jobs:
   build_and_test:
     timeout-minutes: 60
-    runs-on: ubuntu-24.04
+    runs-on: ${{ matrix.os }}
     name: Ubuntu Java 21
     steps:
       - name: Checkout Code
@@ -158,3 +130,10 @@ jobs:
           ${{ env.MAVEN_COMMAND }}
           ${{ env.MAVEN_DOCKER_ARGUMENTS }}
           ${{ env.MAVEN_DOCKER_PROJECTS }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+      fail-fast: false
