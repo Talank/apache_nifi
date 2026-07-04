@@ -16,31 +16,7 @@
 name: integration-tests
 
 on:
-  push:
-    paths:
-      - '.github/workflows/integration-tests.yml'
-      - 'pom.xml'
-      - '**/*-assembly/pom.xml'
-      - '**/*-bom/pom.xml'
-      - '**/test/**/*IT.java'
-      - '**/test/**/*ITCase.java'
-      - '**/test/**/IT*.java'
-      - 'nifi-mock/**'
-      - 'nifi-extension-bundles/nifi-kafka-bundle/**'
-      - 'nifi-registry/nifi-registry-core/nifi-registry-web-api/**'
-  pull_request:
-    paths:
-      - '.github/workflows/integration-tests.yml'
-      - 'pom.xml'
-      - '**/*-assembly/pom.xml'
-      - '**/*-bom/pom.xml'
-      - '**/test/**/*IT.java'
-      - '**/test/**/*ITCase.java'
-      - '**/test/**/IT*.java'
-      - 'nifi-mock/**'
-      - 'nifi-extension-bundles/nifi-kafka-bundle/**'
-      - 'nifi-registry/nifi-registry-core/nifi-registry-web-api/**'
-
+  workflow_dispatch:
 env:
   DEFAULT_MAVEN_OPTS: >-
     -Xmx4g
@@ -96,7 +72,7 @@ permissions:
 jobs:
   build:
     timeout-minutes: 120
-    runs-on: ubuntu-24.04
+    runs-on: ${{ matrix.os }}
     name: Ubuntu Java 21
     steps:
       - name: Checkout Code
@@ -122,10 +98,16 @@ jobs:
           ${{ env.MAVEN_BUILD_ARGUMENTS }}
           ${{ env.MAVEN_BUILD_EXCLUDE_PROJECTS }}
       - name: Upload Troubleshooting Logs
-        if: failure() || cancelled()
+        if: always()
         uses: actions/upload-artifact@v5
         with:
           name: integration-tests-failsafe-logs
           path: |
             **/target/failsafe-reports/**/*.txt
           retention-days: 7
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - ubuntu-24.04-arm
+      fail-fast: false
