@@ -79,7 +79,6 @@ jobs:
           cache: 'maven'
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
-        if: runner.arch != 'ARM64'
         with:
           languages: java
       - name: Maven Package
@@ -97,7 +96,6 @@ jobs:
           pmd:check
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
-        if: runner.arch != 'ARM64'
       - name: Get Project Version
         run: echo "PROJECT_VERSION=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
       - name: Generate SBOM
